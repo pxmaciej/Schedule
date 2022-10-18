@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "lib": [
+            "dom"
+        ],
+        "plugins": [
+            {
+                "name": "@vuedx/typescript-plugin-vue"
+            }
+        ]
+    },
+    "include": [
+        "resources/js/**/*.ts",
+        "resources/js/**/*.d.ts",
+        "resources/js/components/**/*.vue"
+    ],
+    "exclude": ["node_modules", ".vscode"]
+}
