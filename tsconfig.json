@@ -17,9 +17,9 @@
         ]
     },
     "include": [
-        "resources/js/**/*.ts",
-        "resources/js/**/*.d.ts",
-        "resources/js/components/**/*.vue"
+        "resources/src/**/*.ts",
+        "resources/src/js/**/*.d.ts",
+        "resources/src/js/components/**/*.vue"
     ],
     "exclude": ["node_modules", ".vscode"]
 }

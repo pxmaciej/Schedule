@@ -7,7 +7,7 @@ return [
     'default' => [
         'entrypoints' => [
             'paths' => [
-                'resources/js/app.js',
+                'resources/js/app.ts',
                 'resources/css/app.css',
             ],
         ],
