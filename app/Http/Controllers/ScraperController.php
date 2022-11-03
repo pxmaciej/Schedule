@@ -79,9 +79,6 @@ class ScraperController extends Controller
         //count hours
         $countHours = count($this->hours);
 
-        foreach ($this->hours as $key => $hour) {
-           // $this->hours[$key]['class'][] = $this->classGroup[0];
-        }
 
         //marge hours in days
         for ($x = 0; $x < $countDays; $x++) {
@@ -93,6 +90,15 @@ class ScraperController extends Controller
         //marge days in objects
         for ($x = 0; $x < $countGroups; $x++) {
             $this->objects[$x]['days'] = $this->days;
+        }
+
+        //pls start working fuuuuuuu
+        for ($x = 0; $x < $countGroups; $x++) {
+            foreach ($this->days as $k => $day) {
+                foreach ($this->hours as $i => $hour) {
+                    $this->objects[$x][$k][$i][] = $this->classGroup[$x];
+                }
+            }
         }
 
         dd($this->objects);
