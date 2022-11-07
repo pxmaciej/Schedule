@@ -1,7 +1,4 @@
 <script lang="ts" setup>
-const date = ref(new Date());
-const value = ref("");
-
 //Change values to something more subtle
 const options = [
     {
@@ -28,5 +25,9 @@ const options = [
 </script>
 
 <template>
-    <div></div>
+    <div>
+        <v-sheet height="600">
+            <el-calendar> </el-calendar>
+        </v-sheet>
+    </div>
 </template>
