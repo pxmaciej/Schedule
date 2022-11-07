@@ -1,10 +1,13 @@
-import { createApp } from 'vue';
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import App from './App.vue';
-import 'element-plus/theme-chalk/dark/css-vars.css'
+import App from "./App.vue";
 
-const app = createApp(App)
+import "vuetify/styles";
+import { createVuetify } from "vuetify";
+import * as components from "vuetify/components";
+import * as directives from "vuetify/directives";
 
-app.use(ElementPlus)
-app.mount('#app')
+const vuetifty = createVuetify({
+    components,
+    directives,
+});
+
+createApp(App).use(vuetifty).mount("#app");

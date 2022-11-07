@@ -1,15 +1,14 @@
 {
     "compilerOptions": {
-        "target": "ES6",
-        "module": "commonjs",
+        "target": "ESNext",
+        "module": "ESNext",
         "moduleResolution": "node",
+        "strict": true,
         "sourceMap": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
-        "lib": [
-            "dom"
-        ],
+        "lib": ["ESNext"],
         "plugins": [
             {
                 "name": "@vuedx/typescript-plugin-vue"
@@ -17,9 +16,12 @@
         ]
     },
     "include": [
+        "components.d.ts",
+        "auto-imports.d.ts",
+        "resources/src/*.vue",
+        "resources/src/*.ts",
         "resources/src/**/*.ts",
-        "resources/src/js/**/*.d.ts",
-        "resources/src/js/components/**/*.vue"
+        "resources/src/**/*.vue"
     ],
     "exclude": ["node_modules", ".vscode"]
 }
