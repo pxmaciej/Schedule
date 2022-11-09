@@ -14,6 +14,7 @@ class ScraperController extends Controller
     public array $hours = [];
     public array $classGroup = [];
     public array $objects = [];
+    public array $object = [];
 
 
     public function scraper()
@@ -93,15 +94,24 @@ class ScraperController extends Controller
         }
 
         //pls start working fuuuuuuu
+        // for ($x = 0; $x < $countGroups; $x++) {
+        //     foreach ($this->days as $k => $day) {
+        //         foreach ($this->hours as $i => $hour) {
+        //             $this->objects[$x][$k][$i][] = $this->classGroup[$x];
+        //         }
+        //     }
+        // }
+
         for ($x = 0; $x < $countGroups; $x++) {
             foreach ($this->days as $k => $day) {
-                foreach ($this->hours as $i => $hour) {
-                    $this->objects[$x][$k][$i][] = $this->classGroup[$x];
+                for ($y = 0; $y<7; $y++) {
+                    $hour = $this -> hours[$y];
+                    $this->object[$x][$k][$hour][] = $this->classGroup[$x][$y];
                 }
             }
         }
 
-        dd($this->objects);
+        dd($this->object);
        // return View::make('scraper')->with('table', $table);
     }
 
