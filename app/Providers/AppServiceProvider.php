@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Service\StudentDataScrapService;
 use Illuminate\Support\ServiceProvider;
+use App\Http\Controllers\ScraperStudentInterface;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,9 +14,11 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
-        //
+        $this->app->bind(ScraperStudentInterface::class, function () {
+            return new StudentDataScrapService();
+        });
     }
 
     /**

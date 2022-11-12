@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ScraperStudent;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,4 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/scraper', [\App\Http\Controllers\ScraperController::class, 'scraper'])->name('scraper');
+Route::get('/scraper', [ScraperStudent::class, 'scrapStudentSchedule'])->name('scraper');
+
+Route::post('/scrapStudent', [ScraperStudent::class, 'scrapStudentSchedule']);
