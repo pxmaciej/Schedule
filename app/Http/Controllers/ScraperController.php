@@ -14,7 +14,7 @@ class ScraperController extends Controller
     public array $hours = [];
     public array $classGroup = [];
     public array $objects = [];
-    public array $object = [];
+    public array $schedule = [];
 
 
     public function scraper()
@@ -57,14 +57,14 @@ class ScraperController extends Controller
                 $this->class[] = $item;
             }
         }
+
+        $offset = 1;
+        $length = 3;
         //select class divide by groups
         for ($x = 0; $x < $countGroups; $x++) {
-            $offset = 1;
-            $length = 3;
-
             if ($x > 0){
                 $offset += 3;
-                $length *= 2;
+                $length += 3;
             }
 
             foreach ($this->class as $class) {
@@ -76,10 +76,6 @@ class ScraperController extends Controller
         foreach ($this->class as $class) {
             $this->hours[] = $class[0];
         }
-
-        //count hours
-        $countHours = count($this->hours);
-
 
         //marge hours in days
         for ($x = 0; $x < $countDays; $x++) {
@@ -93,25 +89,17 @@ class ScraperController extends Controller
             $this->objects[$x]['days'] = $this->days;
         }
 
-        //pls start working fuuuuuuu
-        // for ($x = 0; $x < $countGroups; $x++) {
-        //     foreach ($this->days as $k => $day) {
-        //         foreach ($this->hours as $i => $hour) {
-        //             $this->objects[$x][$k][$i][] = $this->classGroup[$x];
-        //         }
-        //     }
-        // }
-
+        //create schedule
         for ($x = 0; $x < $countGroups; $x++) {
             foreach ($this->days as $k => $day) {
                 for ($y = 0; $y<7; $y++) {
                     $hour = $this -> hours[$y];
-                    $this->object[$x][$k][$hour][] = $this->classGroup[$x][$y];
+                    $this->schedule[$x][$k][$hour][] = $this->classGroup[$x][$y];
                 }
             }
         }
 
-        dd($this->object);
+        dd($this->schedule);
        // return View::make('scraper')->with('table', $table);
     }
 
