@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ScraperStudent;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,4 +23,7 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
-Route::get('/scraper', [\App\Http\Controllers\ScraperController::class, 'scraper'])->name('scraper');
+Route::get('/scraper', [ScraperStudent::class, 'scrapStudentSchedule'])->name('scraper');
+
+//request->http->'http://www.plan.pwsz.legnica.edu.pl/checkSpecjalnoscStac.php?specjalnosc=s1D'
+Route::post('/scrapStudent', [ScraperStudent::class, 'scrapStudentSchedule']);
