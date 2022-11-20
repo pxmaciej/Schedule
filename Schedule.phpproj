@@ -1,0 +1,11 @@
+<Project Sdk="Devsense.Php.Sdk">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>a7f670ae-e8e8-4dbe-92d6-46ca6e85b6cc</ProjectGuid>
+    <RootNamespace>Schedule</RootNamespace>
+    <WebRoot>public</WebRoot>
+    <RuntimeVersion>8.1</RuntimeVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="*.tmp" />
+  </ItemGroup>
+</Project>

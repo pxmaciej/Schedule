@@ -14,12 +14,12 @@ class ScraperStudent extends Controller
         $this->studentScraper = $studentScraper;
     }
 
-    public function scrapStudentSchedule(Request $request): \Illuminate\Http\JsonResponse
+    public function scrapStudentSchedule(): \Illuminate\Http\JsonResponse
     {
-        //$url = 'http://www.plan.pwsz.legnica.edu.pl/checkSpecjalnoscStac.php?specjalnosc=s1D';
+        $url = 'http://www.plan.collegiumwitelona.pl/checkSpecjalnoscStac.php?specjalnosc=s1INF';
 
         try {
-            return response()->json($this->studentScraper->getSchedule($request->http));
+            return response()->json($this->studentScraper->getSchedule($url));
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
