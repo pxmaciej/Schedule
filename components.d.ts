@@ -12,6 +12,7 @@ declare module '@vue/runtime-core' {
     ElCalendar: typeof import('element-plus/es')['ElCalendar']
     Footer: typeof import('./resources/src/components/Footer.vue')['default']
     Header: typeof import('./resources/src/components/Header.vue')['default']
+    Selector: typeof import('./resources/src/components/Selector.vue')['default']
     VApp: typeof import('vuetify/components')['VApp']
     VAppBar: typeof import('vuetify/components')['VAppBar']
     VAvatar: typeof import('vuetify/components')['VAvatar']

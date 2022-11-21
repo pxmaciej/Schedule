@@ -17,45 +17,15 @@
         </v-app-bar>
 
         <v-main class="grey lighten-3">
-            <v-container>
-                <v-row no-gutters>
-                    <v-col>
-                        <v-sheet min-height="10vh" rounded="lg">
-                            <v-select
-                                label="Wydział"
-                                :items="data"
-                                item-title="department"
-                                item-value="department"
-                            ></v-select>
-                        </v-sheet>
-                    </v-col>
-                    <v-col>
-                        <v-sheet min-height="10vh" rounded="lg">
-                            <!--Change to use index of choosen department-->
-                            <v-select
-                                label="Kierunek"
-                                :items="data[0].cours"
-                                item-title="name"
-                                item-value="name"
-                            ></v-select>
-                        </v-sheet>
-                    </v-col>
-                </v-row>
-                <v-sheet min-height="70vh" rounded="lg">
-                    <Calendar />
-                </v-sheet>
-            </v-container>
+            <v-container> <Selector /> </v-container>>
         </v-main>
     </v-layout>
 </template>
 
 <script lang="ts">
-import * as data from ".//data/scheduleStudentLinks";
-
 export default {
     data: () => ({
         links: ["Student", "Professor"],
-        data: data.items(),
     }),
 };
 </script>
