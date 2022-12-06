@@ -17,7 +17,7 @@
         </v-app-bar>
 
         <v-main class="grey lighten-3">
-            <v-container> <Selector /> </v-container>>
+            <v-container> <Calendar /> </v-container>>
         </v-main>
     </v-layout>
 </template>

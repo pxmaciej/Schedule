@@ -13,6 +13,7 @@ declare module '@vue/runtime-core' {
     Footer: typeof import('./resources/src/components/Footer.vue')['default']
     Header: typeof import('./resources/src/components/Header.vue')['default']
     Selector: typeof import('./resources/src/components/Selector.vue')['default']
+    VAlert: typeof import('vuetify/components')['VAlert']
     VApp: typeof import('vuetify/components')['VApp']
     VAppBar: typeof import('vuetify/components')['VAppBar']
     VAvatar: typeof import('vuetify/components')['VAvatar']
@@ -31,5 +32,8 @@ declare module '@vue/runtime-core' {
     VSheet: typeof import('vuetify/components')['VSheet']
     VSpacer: typeof import('vuetify/components')['VSpacer']
     VTextField: typeof import('vuetify/components')['VTextField']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

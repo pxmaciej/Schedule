@@ -18,16 +18,16 @@
                     <v-select
                         label="Kierunek"
                         :items="data[index].cours"
+                        v-model="link"
                         item-title="name"
                         item-value="name"
                         :disabled="isDepartmentNotSelected"
+                        return-object
+                        @update:model-value="getLink"
                     ></v-select>
                 </v-sheet>
             </v-col>
         </v-row>
-        <v-sheet min-height="70vh" rounded="lg">
-            <Calendar />
-        </v-sheet>
     </v-container>
 </template>
 
@@ -41,8 +41,10 @@ export default {
             selectedDepartmentId: "",
             isDepartmentNotSelected: true,
             index: 0,
+            link: { name: "", link: "" },
         };
     },
+    emits: ["gotLink"],
     methods: {
         selector() {
             console.log(this.selectedDepartmentId);
@@ -52,6 +54,10 @@ export default {
             });
             console.log(this.index);
             return this.selectedDepartmentId;
+        },
+        getLink() {
+            this.$emit("gotLink", this.link.link);
+            return this.link.link;
         },
     },
 };
