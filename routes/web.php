@@ -27,3 +27,7 @@ Route::get('/scraper', [ScraperStudent::class, 'scrapStudentSchedule'])->name('s
 
 //request->http->'http://www.plan.pwsz.legnica.edu.pl/checkSpecjalnoscStac.php?specjalnosc=s1D'
 Route::post('/scrapStudent', [ScraperStudent::class, 'scrapStudentSchedule']);
+
+Route::get('/token', function () {
+    return csrf_token();
+});

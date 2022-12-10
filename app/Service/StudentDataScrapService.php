@@ -105,17 +105,44 @@ class StudentDataScrapService implements ScraperStudentInterface
         $countGroups = $this->countGroups($groups);
 
         for ($x = 0; $x < $countGroups; $x++) {
-            $this->schedule[$x]['group'] = $groups[$x];
+            $this->schedule[$x] = ['group' => $groups[$x]];
 
             foreach ($days as $k => $day) {
-                $this->schedule[$x][$k]['day'] = $day[0];
+                $this->schedule[$x][$k] = ['day' => $day[0]];
 
                 for ($y = 0; $y<7; $y++) {
                     $hour = $hours[$y];
-                    $this->schedule[$x][$k][$hour][] = $classGroup[$x][$y];
+                    $this->schedule[$x][$k][$y] = ['hour' => $hour];
+                    $this->schedule[$x][$k][$y]['lecture'] = $classGroup[$x][$y];
                 }
             }
         }
+       /*
+        foreach ($groups as $group) {
+            $this->schedule['groups'][]['group'] = $group;
+        }
+
+        foreach ($this->schedule['groups'] as $g) {
+            foreach ($days as $day) {
+                $g['days'][]['day'] = $day[0];
+            }
+        }
+
+        foreach ($this->schedule['groups'] as $g) {
+            foreach ($g['days'] as $d) {
+                foreach ($hours as $hour) {
+                    $d['hours'][]['hour'] = $hour;
+                }
+            }
+        }
+
+        foreach ($this->schedule['groups'] as $g) {
+            foreach ($g['days'] as $d) {
+                foreach ($d['hours'] as $h) {
+                    $h['lecture'] = $classGroup[$g['group']][$d['day']][$h['hour']];
+                }
+            }
+        }*/
 
         return $this->schedule;
     }
