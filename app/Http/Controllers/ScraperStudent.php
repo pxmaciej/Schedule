@@ -18,7 +18,7 @@ class ScraperStudent extends Controller
     {
         $url = $request->input('link');
         try {
-            return response()->json($this->studentScraper->getSchedule($url));
+            return response()->json($this->studentScraper->getFormatSchedule($url));
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }

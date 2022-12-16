@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExportIcalController;
 use App\Http\Controllers\ScraperStudent;
 use Illuminate\Support\Facades\Route;
 
@@ -22,11 +23,14 @@ Route::get('/', function () {
 Route::get('/welcome', function () {
     return view('welcome');
 });
-
+//na tego routa nie nic nie puszczać
 Route::get('/scraper', [ScraperStudent::class, 'scrapStudentSchedule'])->name('scraper');
 
 //request->http->'http://www.plan.pwsz.legnica.edu.pl/checkSpecjalnoscStac.php?specjalnosc=s1D'
 Route::post('/scrapStudent', [ScraperStudent::class, 'scrapStudentSchedule']);
+
+//request->http->'http://www.plan.pwsz.legnica.edu.pl/checkSpecjalnoscStac.php?specjalnosc=s1D'
+Route::post('/export', [ExportIcalController::class, 'export']);
 
 Route::get('/token', function () {
     return csrf_token();

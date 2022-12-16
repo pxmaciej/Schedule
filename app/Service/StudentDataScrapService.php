@@ -68,12 +68,12 @@ class StudentDataScrapService implements ScraperStudentInterface
         return $hours;
     }
 
-    private function countGroups($groups): int
+    public function countGroups($groups): int
     {
         return count($groups);
     }
 
-    private function countDays($days): int
+    public function countDays($days): int
     {
         return count($days);
     }
@@ -147,6 +147,32 @@ class StudentDataScrapService implements ScraperStudentInterface
         return $this->schedule;
     }
 
+    private function formatSchedule($groups, $days, $hours, $classGroup): array
+    {
+        $countGroups = $this->countGroups($groups);
+
+        for ($x = 0; $x < $countGroups; $x++) {
+            $this->schedule[$x] = ['group' => $groups[$x]];
+
+            foreach ($days as $k => $day) {
+                $day[0] = substr($day[0], strrpos($day[0], ' ')+1);
+                $this->schedule[$x][$k] = ['day' => $day[0]];
+                for ($y = 0; $y<7; $y++) {
+                    $hourStart = substr($hours[$y],0, strrpos($day[0], '-')-2);
+                    $hourEnd = substr($hours[$y],strrpos($day[0], '-')-1);
+                    $this->schedule[$x][$k][$y] = ['hourStart' => $hourStart];
+                    $this->schedule[$x][$k][$y]['hourEnd'] =  $hourEnd;
+
+                    $this->schedule[$x][$k][$y]['startEvent'] = "$day[0] $hourStart";
+                    $this->schedule[$x][$k][$y]['endEvent'] = "$day[0] $hourEnd";
+                    $this->schedule[$x][$k][$y]['lecture'] = $classGroup[$x][$y];
+                }
+            }
+        }
+
+        return $this->schedule;
+    }
+
     public function getSchedule($url): array
     {
         $table = $this->selectDataFromTable($url);
@@ -157,5 +183,17 @@ class StudentDataScrapService implements ScraperStudentInterface
         $classesGroups = $this->divideClassesByGroups($classes, $groups);
 
         return $this->createSchedule($groups, $days, $hours, $classesGroups);
+    }
+
+    public function getFormatSchedule($url): array
+    {
+        $table = $this->selectDataFromTable($url);
+        $groups = $this->selectGroups($table);
+        $days = $this->selectDays($table);
+        $classes = $this->selectClasses($table, $groups);
+        $hours = $this->selectHours($classes);
+        $classesGroups = $this->divideClassesByGroups($classes, $groups);
+
+        return $this->formatSchedule($groups, $days, $hours, $classesGroups);
     }
 }
