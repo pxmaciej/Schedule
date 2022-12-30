@@ -2,48 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use DateTime;
 use Illuminate\Http\Request;
-use Spatie\CalendarLinks;
-use Spatie\IcalendarGenerator\Components\Calendar;
-use Spatie\IcalendarGenerator\Components\Event;
-
+use Mockery\Exception;
 
 class ExportIcalController extends Controller
 {
-    private ScraperStudentInterface $studentScraper;
+    private ExportIcalInterface $exportIcal;
+    private ScraperInterface $scraper;
 
-    public function __construct(ScraperStudentInterface $studentScraper)
+    public function __construct(ScraperInterface $scraper, ExportIcalInterface $exportIcal)
     {
-        $this->studentScraper = $studentScraper;
+        $this->exportIcal = $exportIcal;
+        $this->scraper = $scraper;
     }
 
-    public function export(Request $request): \Illuminate\Http\JsonResponse
+    public function export(Request $request): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
-        $url = $request->input('link');
-        $formatSchedule = $this->studentScraper->getFormatSchedule($url);
+        try {
+            $url = $request->input('link');
 
-        $array = [];
+            $formatSchedule = $this->scraper->getSchedule($url);
 
-       /* foreach ($formatSchedule as $x => $item) {
-            for ($k = 0; $k < count($item)-2; $k++) {
-                for ($i = 0; $i < 7; $i++) {
-                    $lecture = $item[$k][$i]['lecture'];
-                    $startEvent = $item[$k][$i]['startEvent'];
-                    $endEvent = $item[$k][$i]['endEvent'];
-                    $array[] = Event::create()
-                        ->name("$lecture")
-                        ->description("$lecture")
-                        ->createdAt(new DateTime())
-                        ->startsAt(new DateTime("$startEvent"))
-                        ->endsAt(new DateTime("$endEvent"));
-                }
-            }
-        }*/
+            $calendar = $this->exportIcal->getIcal($formatSchedule);
 
-        $ical = Calendar::create('Plan Collegium Legnica')
-            ->event($array)->get();
-
-        return response()->json($formatSchedule);
+            return response($calendar);
+        } catch (Exception $e) {
+            return response($e->getMessage());
+        }
     }
 }

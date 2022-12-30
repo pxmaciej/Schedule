@@ -2960,16 +2960,16 @@
         },
         {
             "name": "spatie/calendar-links",
-            "version": "1.8.1",
+            "version": "1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/calendar-links.git",
-                "reference": "2fb57af57c167056924c4e7d86c4da0ca56714dd"
+                "reference": "f632ac06599e9ed6cb60a9f85f30e08c5a384248"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/calendar-links/zipball/2fb57af57c167056924c4e7d86c4da0ca56714dd",
-                "reference": "2fb57af57c167056924c4e7d86c4da0ca56714dd",
+                "url": "https://api.github.com/repos/spatie/calendar-links/zipball/f632ac06599e9ed6cb60a9f85f30e08c5a384248",
+                "reference": "f632ac06599e9ed6cb60a9f85f30e08c5a384248",
                 "shasum": ""
             },
             "require": {
@@ -3007,7 +3007,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/calendar-links/issues",
-                "source": "https://github.com/spatie/calendar-links/tree/1.8.1"
+                "source": "https://github.com/spatie/calendar-links/tree/1.8.2"
             },
             "funding": [
                 {
@@ -3015,7 +3015,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2022-12-01T17:19:15+00:00"
+            "time": "2022-12-11T03:02:19+00:00"
         },
         {
             "name": "spatie/enum",
