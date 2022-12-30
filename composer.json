@@ -10,6 +10,8 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "spatie/calendar-links": "^1.8",
+        "spatie/icalendar-generator": "^2.5",
         "weidner/goutte": "^2.2"
     },
     "require-dev": {

@@ -15,3 +15,5 @@ yarn-error.log
 /.idea
 /.vscode
 /laradock/.env
+.vs
+Schedule.phpproj.user
