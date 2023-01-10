@@ -4,8 +4,6 @@ import "vuetify/styles";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import ElementPlus from "element-plus";
-import "element-plus/theme-chalk/dark/css-vars.css";
 
 const vuetifty = createVuetify({
     components,
@@ -15,4 +13,4 @@ const vuetifty = createVuetify({
     },
 });
 
-createApp(App).use(vuetifty).use(ElementPlus).mount("#app");
+createApp(App).use(vuetifty).mount("#app");

@@ -1,5 +1,5 @@
 <template>
-    <v-layout ref="app">
+    <v-app ref="app" theme="dark">
         <v-app-bar
             app
             color="black"
@@ -7,25 +7,22 @@
             title="Schedule"
             class="justify-center"
         >
-            <v-container class="fill-height">
+            <v-container>
                 <v-btn v-for="link in links" :key="link" text>
                     {{ link }}
                 </v-btn>
-
-                <v-spacer> </v-spacer>
             </v-container>
         </v-app-bar>
 
-        <v-main class="grey lighten-3">
-            <v-container> <Calendar /> </v-container>>
+        <v-main>
+            <Calendar />
         </v-main>
-    </v-layout>
+        <v-footer>
+            <Footer />
+        </v-footer>
+    </v-app>
 </template>
 
-<script lang="ts">
-export default {
-    data: () => ({
-        links: ["Student", "Professor"],
-    }),
-};
+<script setup lang="ts">
+const links = ["Student", "Professor"];
 </script>
