@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 
-class ScraperStudent extends Controller
+class Scraper extends Controller
 {
-    private ScraperStudentInterface $studentScraper;
+    private ScraperInterface $studentScraper;
 
-    public function __construct(ScraperStudentInterface $studentScraper)
+    public function __construct(ScraperInterface $studentScraper)
     {
         $this->studentScraper = $studentScraper;
     }
 
-    public function scrapStudentSchedule(Request $request): \Illuminate\Http\JsonResponse
+    public function scrapSchedule(Request $request): \Illuminate\Http\JsonResponse
     {
         $url = $request->input('link');
         try {

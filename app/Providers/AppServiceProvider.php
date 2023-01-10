@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
-use App\Service\StudentDataScrapService;
+use App\Http\Controllers\ExportIcalInterface;
+use App\Service\ExportIcalService;
+use App\Service\ScrapService;
 use Illuminate\Support\ServiceProvider;
-use App\Http\Controllers\ScraperStudentInterface;
+use App\Http\Controllers\ScraperInterface;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -16,8 +18,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(ScraperStudentInterface::class, function () {
-            return new StudentDataScrapService();
+        $this->app->bind(ScraperInterface::class, function () {
+            return new ScrapService();
+        });
+        $this->app->bind(ExportIcalInterface::class, function () {
+            return new ExportIcalService();
         });
     }
 
