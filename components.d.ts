@@ -9,9 +9,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     App: typeof import('./resources/src/App.vue')['default']
     Calendar: typeof import('./resources/src/components/Calendar.vue')['default']
-    ElCalendar: typeof import('element-plus/es')['ElCalendar']
     Footer: typeof import('./resources/src/components/Footer.vue')['default']
-    Header: typeof import('./resources/src/components/Header.vue')['default']
     Selector: typeof import('./resources/src/components/Selector.vue')['default']
     VApp: typeof import('vuetify/components')['VApp']
     VAppBar: typeof import('vuetify/components')['VAppBar']
@@ -19,16 +17,10 @@ declare module '@vue/runtime-core' {
     VCol: typeof import('vuetify/components')['VCol']
     VContainer: typeof import('vuetify/components')['VContainer']
     VFooter: typeof import('vuetify/components')['VFooter']
-    VLayout: typeof import('vuetify/components')['VLayout']
     VMain: typeof import('vuetify/components')['VMain']
     VOverlay: typeof import('vuetify/components')['VOverlay']
     VProgressCircular: typeof import('vuetify/components')['VProgressCircular']
     VRow: typeof import('vuetify/components')['VRow']
     VSelect: typeof import('vuetify/components')['VSelect']
-    VSheet: typeof import('vuetify/components')['VSheet']
-    VSpacer: typeof import('vuetify/components')['VSpacer']
-  }
-  export interface ComponentCustomProperties {
-    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

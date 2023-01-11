@@ -24,5 +24,5 @@
 </template>
 
 <script setup lang="ts">
-const links = ["Student", "Professor"];
+const links = ["Student"];
 </script>
