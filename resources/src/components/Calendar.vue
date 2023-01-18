@@ -44,8 +44,7 @@ const loading = ref(false);
 const loadingButton = ref(false);
 const notReadyToExport = ref(true);
 const linkToExport = ref("");
-const Schedule: Array<DataSchedule> = reactive([]);
-const lessons = ref<Array<Event>>([]);
+const Schedule: Array<any> = reactive([]);
 const calendarOptions = ref({
     plugins: [
         timeGridPlugin,
@@ -90,83 +89,6 @@ const calendarOptions = ref({
         meridiem: false,
     },
 });
-
-const fullCalendar = ref<InstanceType<typeof FullCalendar>>();
-
-interface Schedule {
-    group: string;
-    days: Array<Days>;
-}
-
-interface Days {
-    day: string;
-    hours: Array<Hours>;
-}
-
-interface Hours {
-    hour: string;
-    lecture: Array<Lectures>;
-}
-
-interface Lectures {
-    type: string;
-    professor: string;
-    room: string;
-}
-
-class DataSchedule implements Schedule {
-    group: string;
-    days: Array<Days>;
-
-    constructor(group: string, days?: Array<Days>) {
-        this.group = group;
-        this.days = days || [];
-    }
-
-    addDays(days: Days): void {
-        this.days.push(days);
-    }
-}
-
-class DataDays implements Days {
-    day: string;
-    hours: Array<Hours>;
-
-    constructor(day: string, hours?: Array<Hours>) {
-        this.day = day;
-        this.hours = hours || [];
-    }
-
-    addHours(hours: Hours): void {
-        this.hours.push(hours);
-    }
-}
-
-class DataHours implements Hours {
-    hour: string;
-    lecture: Array<Lectures>;
-
-    constructor(hour: string, lectures?: Array<Lectures>) {
-        this.hour = hour;
-        this.lecture = lectures || [];
-    }
-
-    addLectures(lectures: Lectures): void {
-        this.lecture.push(lectures);
-    }
-}
-
-class DataLecture implements Lectures {
-    type: string;
-    professor: string;
-    room: string;
-
-    constructor(type: string, professor: string, room: string) {
-        this.type = type;
-        this.professor = professor;
-        this.room = room;
-    }
-}
 
 interface Event {
     title: string;

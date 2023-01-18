@@ -30,6 +30,7 @@ declare global {
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const getICal: typeof import('./resources/src/api/apiCalls')['getICal']
   const getStudentSchedule: typeof import('./resources/src/api/apiCalls')['getStudentSchedule']
+  const getURL: typeof import('./resources/src/api/apiCalls')['getURL']
   const h: typeof import('vue')['h']
   const ignorableWatch: typeof import('@vueuse/core')['ignorableWatch']
   const inject: typeof import('vue')['inject']
@@ -296,6 +297,7 @@ declare module 'vue' {
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getICal: UnwrapRef<typeof import('./resources/src/api/apiCalls')['getICal']>
     readonly getStudentSchedule: UnwrapRef<typeof import('./resources/src/api/apiCalls')['getStudentSchedule']>
+    readonly getURL: UnwrapRef<typeof import('./resources/src/api/apiCalls')['getURL']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly ignorableWatch: UnwrapRef<typeof import('@vueuse/core')['ignorableWatch']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
