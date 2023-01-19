@@ -1,184 +1,305 @@
 <template>
-    <div v-loading="loading">
-        <v-sheet height="200">
-            <Selector @got-link="schedule" />
-        </v-sheet>
-        <v-sheet height="600">
-            <el-calendar ref="calendar">
-                <template #date-cell="{ data }">
-                    <p>
-                        {{ data.day.split("-").slice(1).join("-") }}
-                    </p>
-                    <p></p>
-                </template>
-            </el-calendar>
-        </v-sheet>
-        <!-- <ul :key="index" v-for="(group, index) in response">
-                    <li>{{ group.group }}</li>
-                    <li :key="index" v-for="(days, index) in group">
-                        <li :key="index" v-for="(hours, index) in days">
-                            {{hours}} - {{index}}
-                        </li>
-                    </li>      
-                </ul> -->
-    </div>
+    <v-container>
+        <v-row>
+            <v-col>
+                <Selector @got-link="schedule" />
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <v-btn
+                    variant="outlined"
+                    rounded="lg"
+                    :model-value="loadingButton"
+                    :disabled="notReadyToExport"
+                    @click="postLinkToExport(linkToExport)"
+                >
+                    Export to ICal
+                </v-btn>
+            </v-col>
+            <v-col>
+                <!--Where icons-->
+                <v-icon icon="mdi-access-point"></v-icon>
+                <v-select
+                    label="Group"
+                    clearable
+                    :items="groupArray"
+                    :disabled="notReadyToExport"
+                    v-model="eventsId"
+                    @update:model-value="filterByGroup"
+                >
+                </v-select>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <FullCalendar
+                    ref="fullCalendar"
+                    :options="calendarOptions"
+                ></FullCalendar>
+            </v-col>
+        </v-row>
+        <v-overlay :model-value="loading" class="align-center justify-center">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
+    </v-container>
 </template>
 
 <script setup lang="ts">
-import { getStudentSchedule } from "../api/scrapperCalls";
+import FullCalendar from "@fullcalendar/vue3";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import iCalendarPlugin from "@fullcalendar/icalendar";
+import plLocale from "@fullcalendar/core/locales/pl";
+import { getStudentSchedule, getICal } from "../api/apiCalls";
 import Selector from "./Selector.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 const loading = ref(false);
-const response: any = ref([]);
-const groups = reactive([""]);
-const calendar = ref();
-const newObject: Array<DataSchedule> = reactive([]);
+const loadingButton = ref(false);
+const notReadyToExport = ref(true);
+const linkToExport = ref("");
+const Schedule: Array<any> = reactive([]);
 
-interface Schedule {
-    group: string;
-    days: Array<Days>;
+const groupArray = ref([""]);
+const eventsId = ref("");
+
+const calendarOptions = ref({
+    plugins: [
+        timeGridPlugin,
+        dayGridPlugin,
+        interactionPlugin,
+        iCalendarPlugin,
+    ],
+    initialView: "dayGridMonth",
+    headerToolbar: {
+        start: "dayGridMonth,dayGridWeek,timeGridDay",
+        center: "title",
+    },
+    views: {
+        dayGridMonth: { showNonCurrentDates: false },
+        dayGridWeek: {},
+        timeGridDay: {
+            allDaySlot: false,
+            slotMinTime: "08:00",
+            slotMaxTime: "20:30",
+            slotLabelFormat: {
+                hour: "numeric",
+                minute: "2-digit",
+                omitZeroMinute: false,
+            },
+            slotDuration: "00:15:00",
+            expandRows: true,
+            nowIndicator: true,
+        },
+    },
+    locale: plLocale,
+    events: [{}],
+    eventContent: function (arg: { event: { title: string } }) {
+        return {
+            html: arg.event.title.replace(/\n/g, "<br>"),
+        };
+    },
+    eventDisplay: "block",
+    displayEventEnd: true,
+    eventTimeFormat: {
+        hour: "2-digit",
+        minute: "2-digit",
+        meridiem: false,
+    },
+});
+
+const fullCalendar = ref<InstanceType<typeof FullCalendar>>();
+let calendar: any;
+
+onMounted(() => {
+    calendar = fullCalendar.value?.getApi();
+});
+
+interface Event {
+    title: string;
+    start: string;
+    end: string;
 }
 
-interface Days {
-    day: string;
-    hours: Array<Hours>;
-}
+class Event implements Event {
+    id: string;
+    title: string;
+    start: string;
+    end: string;
+    color: string;
+    display: string;
 
-interface Hours {
-    hour: string;
-    lecture: Array<Lectures>;
-}
-
-interface Lectures {
-    type: string;
-    professor: string;
-    room: string;
-}
-
-class DataSchedule implements Schedule {
-    group: string;
-    days: Array<Days>;
-
-    constructor(group: string, days?: Array<Days>) {
-        this.group = group;
-        this.days = days || [];
+    constructor(
+        id: string,
+        title: string,
+        start: Date,
+        end: Date,
+        color: string,
+        display: string
+    ) {
+        this.id = id;
+        this.title = title;
+        this.start = start.toJSON();
+        this.end = end.toJSON();
+        this.color = color;
+        this.display = display;
     }
-
-    addDays(days: Days): void {
-        this.days.push(days);
-    }
 }
-
-class DataDays implements Days {
-    day: string;
-    hours: Array<Hours>;
-
-    constructor(day: string, hours?: Array<Hours>) {
-        this.day = day;
-        this.hours = hours || [];
-    }
-
-    addHours(hours: Hours): void {
-        this.hours.push(hours);
-    }
-}
-
-class DataHours implements Hours {
-    hour: string;
-    lecture: Array<Lectures>;
-
-    constructor(hour: string, lectures?: Array<Lectures>) {
-        this.hour = hour;
-        this.lecture = lectures || [];
-    }
-
-    addLectures(lectures: Lectures): void {
-        this.lecture.push(lectures);
-    }
-}
-
-class DataLecture implements Lectures {
-    type: string;
-    professor: string;
-    room: string;
-
-    constructor(type: string, professor: string, room: string) {
-        this.type = type;
-        this.professor = professor;
-        this.room = room;
-    }
-}
-
-const test: Array<DataSchedule> = reactive([
-    new DataSchedule("s1PAM", [
-        new DataDays("Wtorek-24.24.21", [
-            new DataHours("8:00-9:45", [new DataLecture("-", "-", "-")]),
-        ]),
-    ]),
-]);
 
 async function schedule(link: string) {
     try {
         loading.value = true;
+        linkToExport.value = link;
         const res = await getStudentSchedule(link);
-        console.log(`Schedule function result:`);
-        console.log(res?.data);
-        response.value = res?.data;
+        const schedule = res?.data.map((x: any) => x);
         loading.value = false;
-        console.log("Response value: ");
-        console.log(response.value);
-        transformData(res?.data);
-        console.log(newObject);
-        //sort(res?.data);
+        notReadyToExport.value = false;
+        Schedule.splice(0, Schedule.length);
+        Schedule.push(schedule);
+        console.log(Schedule);
+
+        addEventsToCalendar(Schedule);
     } catch (error) {
         console.log(error);
     }
 }
 
-function sort(data: Array<Object>) {
-    let element: any;
-    for (element of data) {
-        groups.push(element.group);
-        for (let key in element) {
-            console.log("key");
-            console.log(element[key]);
-            for (const [key2, value] of Object.entries(element[key])) {
-                console.log(`${key2}: ${value}`);
+function addEventsToCalendar(schedule: Array<any>) {
+    calendarOptions.value.events.length = 0;
+    groupArray.value.length = 0;
+    for (let a in schedule) {
+        for (let b in schedule[a]) {
+            let group = schedule[a][b].group;
+            groupArray.value.push(group);
+            for (let c in schedule[a][b]) {
+                if (c != "group") {
+                    for (let d in schedule[a][b][c]) {
+                        if (d != "day") {
+                            let start = new Date(
+                                schedule[a][b][c][d].startEvent
+                            );
+                            let end = new Date(schedule[a][b][c][d].endEvent);
+                            let lecture: Array<string> =
+                                schedule[a][b][c][d].lecture;
+                            lecture = lecture.map((i) => i + "\n");
+                            let transformedLecture: string =
+                                lecture[0] + lecture[1] + lecture[2];
+                            if (lecture[0] != "-\n") {
+                                let colours = [
+                                    "blue",
+                                    "green",
+                                    "#58114f",
+                                    "#cf3a2f",
+                                    "orange",
+                                    "#5f383e",
+                                    "#e2ba74",
+                                    "#3f4280",
+                                ];
+
+                                let index = groupArray.value.length - 1;
+
+                                let color = colours[index];
+
+                                let hoursStart =
+                                    start.getHours() +
+                                    ":" +
+                                    String(start.getMinutes()).padStart(2, "0");
+
+                                let hoursEnd =
+                                    end.getHours() +
+                                    ":" +
+                                    String(end.getMinutes()).padStart(2, "0");
+
+                                let lesson = new Event(
+                                    group,
+                                    "Grupa: " +
+                                        group +
+                                        "\n Godziny: " +
+                                        hoursStart +
+                                        " - " +
+                                        hoursEnd +
+                                        "\n" +
+                                        transformedLecture,
+                                    start,
+                                    end,
+                                    color,
+                                    ""
+                                );
+                                calendarOptions.value.events.push(lesson);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
 
-function transformData(data: Array<any>) {
-    for (let a in data) {
-        const groups = new DataSchedule(data[a].group);
-        for (let b in data[a]) {
-            const days = new DataDays(data[a][b].day);
-            if (b != "group") {
-                for (let hours in data[a][b]) {
-                    if (hours != "day") {
-                        console.log("Hours: ");
-                        console.log(hours);
-                        const type = data[a][b][hours][0][0];
-                        const professor = data[a][b][hours][0][1];
-                        const room = data[a][b][hours][0][2];
-                        console.log(data[a][b][hours]);
-                        const lecture = new DataLecture(type, professor, room);
-                        const hour = new DataHours(hours);
-                        hour.addLectures(lecture);
-                        days.addHours(hour);
-                        console.log("Hours");
-                        console.log(hour);
-                        console.log("Days");
-                        console.log(days);
-                    }
-                }
+function filterByGroup(id: string) {
+    console.log(id);
+    for (let e in calendarOptions.value.events) {
+        calendarOptions.value.events[e].display = "block";
+        if (id != null) {
+            if (calendarOptions.value.events[e].id != id) {
+                calendarOptions.value.events[e].display = "none";
             }
-            groups.addDays(days);
         }
-        newObject.push(groups);
     }
-    console.log(newObject);
+}
+
+async function postLinkToExport(link: string) {
+    try {
+        loadingButton.value = true;
+        await getICal(link).then((res) => {
+            let blob = new Blob([res?.data], { type: "" });
+            let link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = "Calendar.ical";
+
+            link.click();
+        });
+        loadingButton.value = false;
+    } catch (error) {
+        console.log(error);
+    }
 }
 </script>
+
+<style>
+#calendar {
+    margin: 40px auto;
+}
+
+.fc-event-title .fc-sticky {
+    margin: 1px;
+    padding: 1px;
+    white-space: normal;
+}
+
+.fc-event-time {
+    margin: 1px;
+    padding: 1px;
+    white-space: normal;
+    font-size: 0.9em;
+    width: fit-content;
+}
+
+.fc-h-event .fc-event-main-frame {
+    display: block; /* for make fc-event-title-container expand */
+    white-space: normal;
+}
+.fc .fc-daygrid-event-harness {
+    margin-bottom: 5px;
+    white-space: normal;
+}
+.fc-event {
+    font-size: small;
+    font-weight: bold;
+}
+:root {
+    --fc-border-color: white;
+    --fc-today-bg-color: rgba(188, 224, 26, 0.178);
+}
+</style>

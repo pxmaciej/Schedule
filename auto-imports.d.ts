@@ -2,7 +2,6 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue')['EffectScope']
-  const app: typeof import('./resources/src/App.vue')['default']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const computed: typeof import('vue')['computed']
@@ -29,7 +28,9 @@ declare global {
   const extendRef: typeof import('@vueuse/core')['extendRef']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
-  const getStudentSchedule: typeof import('./resources/src/api/scrapperCalls')['getStudentSchedule']
+  const getICal: typeof import('./resources/src/api/apiCalls')['getICal']
+  const getStudentSchedule: typeof import('./resources/src/api/apiCalls')['getStudentSchedule']
+  const getURL: typeof import('./resources/src/api/apiCalls')['getURL']
   const h: typeof import('vue')['h']
   const ignorableWatch: typeof import('@vueuse/core')['ignorableWatch']
   const inject: typeof import('vue')['inject']
@@ -268,7 +269,6 @@ import { UnwrapRef } from 'vue'
 declare module 'vue' {
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
-    readonly app: UnwrapRef<typeof import('./resources/src/App.vue')['default']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
@@ -295,7 +295,9 @@ declare module 'vue' {
     readonly extendRef: UnwrapRef<typeof import('@vueuse/core')['extendRef']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
-    readonly getStudentSchedule: UnwrapRef<typeof import('./resources/src/api/scrapperCalls')['getStudentSchedule']>
+    readonly getICal: UnwrapRef<typeof import('./resources/src/api/apiCalls')['getICal']>
+    readonly getStudentSchedule: UnwrapRef<typeof import('./resources/src/api/apiCalls')['getStudentSchedule']>
+    readonly getURL: UnwrapRef<typeof import('./resources/src/api/apiCalls')['getURL']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly ignorableWatch: UnwrapRef<typeof import('@vueuse/core')['ignorableWatch']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>

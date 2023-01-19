@@ -1,31 +1,28 @@
 <template>
     <v-container>
-        <v-row no-gutters>
+        <v-row justify="space-around">
             <v-col>
-                <v-sheet min-height="10vh" rounded="lg">
-                    <v-select
-                        label="Wydział"
-                        :items="data"
-                        v-model="selectedDepartmentId"
-                        item-title="department"
-                        @update:model-value="selector"
-                    ></v-select>
-                </v-sheet>
+                <v-select
+                    label="Wydział"
+                    :items="data"
+                    v-model="selectedDepartmentId"
+                    item-title="department"
+                    @update:model-value="selector"
+                    variant="solo"
+                ></v-select>
             </v-col>
             <v-col>
-                <v-sheet min-height="10vh" rounded="lg">
-                    <!--Change to use index of choosen department-->
-                    <v-select
-                        label="Kierunek"
-                        :items="data[index].cours"
-                        v-model="link"
-                        item-title="name"
-                        item-value="name"
-                        :disabled="isDepartmentNotSelected"
-                        return-object
-                        @update:model-value="getLink"
-                    ></v-select>
-                </v-sheet>
+                <v-select
+                    label="Kierunek"
+                    :items="data[index].cours"
+                    v-model="link"
+                    item-title="name"
+                    item-value="name"
+                    :disabled="isDepartmentNotSelected"
+                    return-object
+                    @update:model-value="getLink"
+                    variant="solo"
+                ></v-select>
             </v-col>
         </v-row>
     </v-container>
@@ -47,12 +44,10 @@ export default {
     emits: ["gotLink"],
     methods: {
         selector() {
-            console.log(this.selectedDepartmentId);
             this.isDepartmentNotSelected = false;
             this.index = this.data.findIndex((object) => {
                 return object.department == this.selectedDepartmentId;
             });
-            console.log(this.index);
             return this.selectedDepartmentId;
         },
         getLink() {
