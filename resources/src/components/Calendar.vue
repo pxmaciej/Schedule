@@ -17,10 +17,26 @@
                     Export to ICal
                 </v-btn>
             </v-col>
+            <v-col>
+                <!--Where icons-->
+                <v-icon icon="mdi-access-point"></v-icon>
+                <v-select
+                    label="Group"
+                    clearable
+                    :items="groupArray"
+                    :disabled="notReadyToExport"
+                    v-model="eventsId"
+                    @update:model-value="filterByGroup"
+                >
+                </v-select>
+            </v-col>
         </v-row>
         <v-row>
             <v-col>
-                <FullCalendar :options="calendarOptions"></FullCalendar>
+                <FullCalendar
+                    ref="fullCalendar"
+                    :options="calendarOptions"
+                ></FullCalendar>
             </v-col>
         </v-row>
         <v-overlay :model-value="loading" class="align-center justify-center">
@@ -36,15 +52,19 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import iCalendarPlugin from "@fullcalendar/icalendar";
 import plLocale from "@fullcalendar/core/locales/pl";
-import { getStudentSchedule, getICal, getURL } from "../api/apiCalls";
+import { getStudentSchedule, getICal } from "../api/apiCalls";
 import Selector from "./Selector.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 const loading = ref(false);
 const loadingButton = ref(false);
 const notReadyToExport = ref(true);
 const linkToExport = ref("");
 const Schedule: Array<any> = reactive([]);
+
+const groupArray = ref([""]);
+const eventsId = ref("");
+
 const calendarOptions = ref({
     plugins: [
         timeGridPlugin,
@@ -90,6 +110,13 @@ const calendarOptions = ref({
     },
 });
 
+const fullCalendar = ref<InstanceType<typeof FullCalendar>>();
+let calendar: any;
+
+onMounted(() => {
+    calendar = fullCalendar.value?.getApi();
+});
+
 interface Event {
     title: string;
     start: string;
@@ -102,19 +129,22 @@ class Event implements Event {
     start: string;
     end: string;
     color: string;
+    display: string;
 
     constructor(
         id: string,
         title: string,
         start: Date,
         end: Date,
-        color: string
+        color: string,
+        display: string
     ) {
         this.id = id;
         this.title = title;
         this.start = start.toJSON();
         this.end = end.toJSON();
         this.color = color;
+        this.display = display;
     }
 }
 
@@ -126,6 +156,7 @@ async function schedule(link: string) {
         const schedule = res?.data.map((x: any) => x);
         loading.value = false;
         notReadyToExport.value = false;
+        Schedule.splice(0, Schedule.length);
         Schedule.push(schedule);
         console.log(Schedule);
 
@@ -136,9 +167,12 @@ async function schedule(link: string) {
 }
 
 function addEventsToCalendar(schedule: Array<any>) {
+    calendarOptions.value.events.length = 0;
+    groupArray.value.length = 0;
     for (let a in schedule) {
         for (let b in schedule[a]) {
             let group = schedule[a][b].group;
+            groupArray.value.push(group);
             for (let c in schedule[a][b]) {
                 if (c != "group") {
                     for (let d in schedule[a][b][c]) {
@@ -153,14 +187,44 @@ function addEventsToCalendar(schedule: Array<any>) {
                             let transformedLecture: string =
                                 lecture[0] + lecture[1] + lecture[2];
                             if (lecture[0] != "-\n") {
+                                let colours = [
+                                    "blue",
+                                    "green",
+                                    "#58114f",
+                                    "#cf3a2f",
+                                    "orange",
+                                    "#5f383e",
+                                    "#e2ba74",
+                                    "#3f4280",
+                                ];
+
+                                let index = groupArray.value.length - 1;
+
+                                let color = colours[index];
+
+                                let hoursStart =
+                                    start.getHours() +
+                                    ":" +
+                                    String(start.getMinutes()).padStart(2, "0");
+
+                                let hoursEnd =
+                                    end.getHours() +
+                                    ":" +
+                                    String(end.getMinutes()).padStart(2, "0");
+
                                 let lesson = new Event(
                                     group,
                                     "Grupa: " +
                                         group +
+                                        "\n Godziny: " +
+                                        hoursStart +
+                                        " - " +
+                                        hoursEnd +
                                         "\n" +
                                         transformedLecture,
                                     start,
                                     end,
+                                    color,
                                     ""
                                 );
                                 calendarOptions.value.events.push(lesson);
@@ -168,6 +232,18 @@ function addEventsToCalendar(schedule: Array<any>) {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+function filterByGroup(id: string) {
+    console.log(id);
+    for (let e in calendarOptions.value.events) {
+        calendarOptions.value.events[e].display = "block";
+        if (id != null) {
+            if (calendarOptions.value.events[e].id != id) {
+                calendarOptions.value.events[e].display = "none";
             }
         }
     }
@@ -192,14 +268,6 @@ async function postLinkToExport(link: string) {
 </script>
 
 <style>
-html,
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-    font-size: 14px;
-}
-
 #calendar {
     margin: 40px auto;
 }
@@ -225,6 +293,10 @@ body {
 .fc .fc-daygrid-event-harness {
     margin-bottom: 5px;
     white-space: normal;
+}
+.fc-event {
+    font-size: small;
+    font-weight: bold;
 }
 :root {
     --fc-border-color: white;

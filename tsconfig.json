@@ -13,7 +13,10 @@
             {
                 "name": "@vuedx/typescript-plugin-vue"
             }
-        ]
+        ],
+        "compilerOptions": {
+            "types": ["unplugin-icons/types/vue"]
+        }
     },
     "include": [
         "components.d.ts",

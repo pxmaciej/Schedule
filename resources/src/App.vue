@@ -1,12 +1,6 @@
 <template>
-    <v-app ref="app" theme="dark">
-        <v-app-bar
-            app
-            color="black"
-            flat
-            title="Schedule"
-            class="justify-center"
-        >
+    <v-app>
+        <v-app-bar app flat title="Schedule" class="justify-center">
             <v-container>
                 <v-btn v-for="link in links" :key="link" text>
                     {{ link }}
@@ -26,3 +20,7 @@
 <script setup lang="ts">
 const links = ["Student"];
 </script>
+
+<style lang="scss">
+@import "./assets/style.scss";
+</style>

@@ -1,15 +1,18 @@
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
-import { Vuetify3Resolver } from "unplugin-vue-components/resolvers";
-import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import vuetify from "vite-plugin-vuetify";
 import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
+import Icons from "unplugin-icons/vite";
+import IconsResolver from "unplugin-icons/resolver";
 
 export default defineConfig({
     plugins: [
         vue(),
         laravel("config/vite.php"),
+        vuetify(),
+        Icons({ compiler: "vue3", autoInstall: true }),
         AutoImport({
             imports: ["vue", "@vueuse/core"],
             dts: "./auto-imports.d.ts",
@@ -20,14 +23,14 @@ export default defineConfig({
                 "./resources/src/components",
             ],
             vueTemplate: true,
-            resolvers: [Vuetify3Resolver(), ElementPlusResolver()],
+            resolvers: [IconsResolver()],
         }),
         Components({
             dirs: ["./resources/src"],
             dts: true,
             extensions: ["vue"],
             include: [/\.vue$/, /\.vue\?vue/],
-            resolvers: [Vuetify3Resolver(), ElementPlusResolver()],
+            resolvers: [],
         }),
     ],
 });
